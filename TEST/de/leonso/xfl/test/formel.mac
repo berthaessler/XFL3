@@ -1,0 +1,39 @@
+FIELD Info:=EREIGNIS_TEXT;
+
+_msg := @If(@Contains(Info; "..."); @RunJob("Zusatzinfos lesen"); "");
+@If(_msg = ""; ""; @Return(_msg));
+
+@Formel("StatusSetzen"; "in Arbeit");
+
+_msg := @RunJob("Registrierte Konten Prüfen");
+@If(_msg = ""; ""; @Return(_msg));
+
+
+@If(ErlaubteKonten!=""; @Do(
+                                       _msg := @RunJob("Formulargroesse Kontoauszug auf A4 stellen");
+                                       @If(_msg = ""; ""; @Return(_msg))
+                                      );
+"");
+
+REM {wenn abgewiesene Kontoarten erkannt werden, wird an XXX weitergeleitet};
+
+@If(AbgewieseneKonten!=""; @Do(
+                                   _msg := @RunJob("Weiterleiten an XXX");
+                                  @If(_msg = ""; ""; @Return(_msg));
+                                  @Goto(Ende));
+                      
+"");
+
+REM {wenn Depots erkannt werden, wird weitergeleitet, sonst auf erledigt setzen};
+
+@If(Depots!=""; @Do(
+                                   _msg := @RunJob("Weiterleiten an Depotbuchhaltung");
+                                  @If(_msg = ""; ""; @Return(_msg)));
+
+       @Do(
+                 _msg := @RunJob("Reaktionscode 00 setzen");
+                 @If(_msg = "";  @Formel("StatusSetzen"; "verarbeitet"); @Return(_msg)))
+);
+
+LABEL Ende;
+_msg 
