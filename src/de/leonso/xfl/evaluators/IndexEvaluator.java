@@ -18,8 +18,8 @@ public class IndexEvaluator extends Evaluator {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data dTemp = expression.getElement(0).evaluate(rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data dTemp = expression.getElement(0).evaluate(context);
 		Object value = dTemp.getValue();
 		List<Object> list = null;
 		if (value instanceof List<?>) {
@@ -39,10 +39,10 @@ public class IndexEvaluator extends Evaluator {
 			}
 		}
 
-		dTemp = expression.getElement(1).evaluate(rti);
+		dTemp = expression.getElement(1).evaluate(context);
 		Object indexO = dTemp.getValue();
 		Integer ix = ((Number) indexO).intValue();
-		Data res = new Data(expression, rti);
+		Data res = new Data(expression, context);
 
 		// das hier kann Fehler ausloesen.
 		// v3.0.3: negative Angabe zaehlt von hinten

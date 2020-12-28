@@ -27,11 +27,11 @@ public class BlockEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
 		ArrayList<Expression> elements = expression.getElements();
 
-		Data temp = new Data(expression, rti);
+		Data temp = new Data(expression, context);
 		temp.setType(DataType.CODE_BOTH);
 
 		Data res = null;
@@ -49,19 +49,19 @@ public class BlockEvaluator extends Evaluator {
 			}
 		}
 
-		res = processBlock(expression, elements, temp, iStart, rti);
+		res = processBlock(expression, elements, temp, iStart, context);
 
 		return res;
 	}
 
-	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context rti) throws Exception {
+	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context context) throws Exception {
 
 		Data res = null;
 
 		for (int i = iStart; i < elements.size(); i++) {
 
 			try {
-				res = evalAndCheckGoto(expression, i, elements, defaultData, rti);
+				res = evalAndCheckGoto(expression, i, elements, defaultData, context);
 				// wir muessen sicherstellen, dass auch wirklich die Formel
 				// ausgefuehrt wird und nicht bloss der Code erzeugt wird
 				res.convertToVarItem();
@@ -74,13 +74,13 @@ public class BlockEvaluator extends Evaluator {
 		return res;
 	}
 
-	protected Data evalAndCheckGoto(Expression expression, int currentPos, ArrayList<Expression> elements, Data temp, Context rti) throws Exception {
+	protected Data evalAndCheckGoto(Expression expression, int currentPos, ArrayList<Expression> elements, Data temp, Context context) throws Exception {
 
 		Data res;
 		Expression exp = elements.get(currentPos);
 
 		try {
-			res = exp.evaluate(rti);
+			res = exp.evaluate(context);
 			// temp.addChild(res);
 
 		} catch (GotoException e) {

@@ -16,12 +16,12 @@ public class GetFieldEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
-		String name = (String) expression.getElement(0).evaluate(rti).getValue();
-		Document refDoc = rti.getRefDoc();
+		String name = (String) expression.getElement(0).evaluate(context).getValue();
+		Document refDoc = context.getRefDoc();
 
-		Data res = new Data(expression, rti);
+		Data res = new Data(expression, context);
 		if (refDoc.hasItem(name)) {
 			Item item = refDoc.getFirstItem(name);
 			res.assignItem(item);

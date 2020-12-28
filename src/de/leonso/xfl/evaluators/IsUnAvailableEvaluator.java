@@ -14,10 +14,10 @@ public class IsUnAvailableEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
 		res.setType(DataType.CODE_BOTH);
-		if (expression.getElement(0).evaluate(rti).getType() == DataType.UNAVAILABLE) {
+		if (expression.getElement(0).evaluate(context).getType() == DataType.UNAVAILABLE) {
 			res.setText("@True");
 		} else {
 			res.setText("@False");

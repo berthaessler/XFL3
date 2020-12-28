@@ -16,10 +16,10 @@ public class RunAgentEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data data = expression.getElement(0).evaluate(rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data data = expression.getElement(0).evaluate(context);
 		String agentName = (String) data.getValue();
-		Data res = new Data(expression, rti);
+		Data res = new Data(expression, context);
 		res.setType(DataType.CODE_BOTH);
 		res.setText("{}");
 		Database db = getEngine().getCurrentDatabase();

@@ -17,14 +17,14 @@ public class RecycleEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
 		res.setType(DataType.CODE_BOTH);
 		res.setText("0");
 
 		ArrayList<Expression> elements = expression.getElements();
 		for (Expression exp : elements) {
-			Data data = exp.evaluate(rti);
+			Data data = exp.evaluate(context);
 			Object object = data.getObject();
 			if (object == null) {
 				// OK

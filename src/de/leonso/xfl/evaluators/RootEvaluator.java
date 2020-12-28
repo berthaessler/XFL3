@@ -19,9 +19,9 @@ public class RootEvaluator extends BlockEvaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 		try {
-			return super.evaluate(expression, rti);
+			return super.evaluate(expression, context);
 		} catch (CancelException e) {
 			return e.getData();
 		} catch (ReturnException e) {
@@ -42,10 +42,10 @@ public class RootEvaluator extends BlockEvaluator {
 	}
 
 	@Override
-	protected Data evalAndCheckGoto(Expression expression, int currentPos, ArrayList<Expression> elements, Data temp, Context rti) throws Exception {
+	protected Data evalAndCheckGoto(Expression expression, int currentPos, ArrayList<Expression> elements, Data temp, Context context) throws Exception {
 
 		try {
-			return super.evalAndCheckGoto(expression, currentPos, elements, temp, rti);
+			return super.evalAndCheckGoto(expression, currentPos, elements, temp, context);
 		} catch (GotoException e) {
 			// wenn wir hier rauskommen, wurde nirgendwo das Label gefunden
 			String label = e.getLabel();

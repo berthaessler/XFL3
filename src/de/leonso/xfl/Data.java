@@ -48,6 +48,7 @@ public class Data implements Serializable {
 	private final static byte ACCESS_OPTION_ADD = 2;
 	private final static byte ACCESS_OPTION_ADD_ALL = 3;
 
+	@SuppressWarnings("unchecked")
 	private synchronized static String accessReleasedItemList(byte function, Object name) {
 		if (ACCESS_OPTION_GET_FISRT_AND_REMOVE == function) {
 			String res = releasedItems.get(0);
@@ -303,7 +304,7 @@ public class Data implements Serializable {
 					engine.registerUnusedItem(text);
 
 					// releaseItemName(text);
-					// DocumentWrapper refDoc = rti.getRefDoc();
+					// DocumentWrapper refDoc = context.getRefDoc();
 					// removeItem(refDoc, text);
 				}
 			} else if (type == DataType.OBJECT) {

@@ -18,7 +18,7 @@ public class GosubEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 		String title = expression.getElement(0).getTitle();
 		// Kopie des Baumes anlegen
 		Expression xTemp = expression.getParent();
@@ -35,16 +35,16 @@ public class GosubEvaluator extends Evaluator {
 			}
 		}
 		Expression tmpRoot = xTemp; // TODO das muss auch ohne Kopie gehen
-		Context tmpRti = expression.getEngine().createContext(tmpRoot, rti.getRefDoc());
+		Context tmpRti = expression.getEngine().createContext(tmpRoot, context.getRefDoc());
 
 		try {
 			// Variablen uebergeben
-			Map<String, Data> varsMap = rti.getVarsMap();
+			Map<String, Data> varsMap = context.getVarsMap();
 			for (Entry<String, Data> e : varsMap.entrySet()) {
 				tmpRti.setVar(e.getKey(), e.getValue());
 			}
 			// Objekte uebergeben
-			Map<String, Data> oMap = rti.getObjectsMap();
+			Map<String, Data> oMap = context.getObjectsMap();
 			for (Entry<String, Data> e : oMap.entrySet()) {
 				tmpRti.setVar(e.getKey(), e.getValue());
 			}
@@ -69,18 +69,18 @@ public class GosubEvaluator extends Evaluator {
 				varsMap = tmpRti.getVarsMap();
 				for (Entry<String, Data> e : varsMap.entrySet()) {
 					Data data = e.getValue();
-					Data copy = new Data(expression, rti);
+					Data copy = new Data(expression, context);
 					copy.assignItem(data.getItem()); // umspeichern
-					rti.setVar(e.getKey(), copy);
+					context.setVar(e.getKey(), copy);
 				}
 				// Objekte uebergeben
 				oMap = tmpRti.getObjectsMap();
 				for (Entry<String, Data> e : oMap.entrySet()) {
-					rti.setVar(e.getKey(), e.getValue());
+					context.setVar(e.getKey(), e.getValue());
 				}
 			}
 
-			Data res = new Data(expression, rti);
+			Data res = new Data(expression, context);
 			res.assignItem(tmpRes.getItem()); // umspeichern in aktuelle RTI
 			return res;
 		} finally {

@@ -23,35 +23,8 @@ public class Root extends Expression {
 	// private boolean checked = false;
 
 	@Override
-	public Data evaluate(Context rti) throws ScriptException {
-		// Lizenzcodepruefung
-		// if (!checked) {
-		// Name name = null;
-		// boolean ok = false;
-		// XflEngine eng = getEngine();
-		// try {
-		// Session session = eng.getSession();
-		// name = session.createName(session.getEffectiveUserName());
-		// String organization = name.getOrganization();
-		// String keys = eng.getLicenseKey();
-		// String[] keyArr = keys.split(",");
-		// for (int i = 0; i < keyArr.length; i++) {
-		// ok = eng.check(keyArr[i], organization);
-		// if (ok) {
-		// break;
-		// }
-		// }
-		// } catch (Exception ignore) {
-		// } finally {
-		// UtilsNotes.recycleDominoObject(null, name);
-		// }
-		// if (!ok) {
-		// eng.log("XFL Engine v" + XflEngine.VERSION + ", (c) 2019 Leonso GmbH. FREE download at www.nappz.de/xfl");
-		// }
-		// checked = true;
-		// }
-
-		DocumentWrapper refDoc = rti.getRefDoc();
+	public Data evaluate(Context context) throws ScriptException {
+		DocumentWrapper refDoc = context.getRefDoc();
 		boolean sameDoc = false;
 
 		boolean globalDocWasSet = false;
@@ -70,7 +43,7 @@ public class Root extends Expression {
 		}
 
 		// bereitstellen
-		Data result = super.evaluate(rti);
+		Data result = super.evaluate(context);
 		if (globalDocWasSet) {
 			boolean resetGlobalDoc = true;
 			if (sameDoc) {

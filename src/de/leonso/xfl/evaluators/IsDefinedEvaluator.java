@@ -14,10 +14,10 @@ public class IsDefinedEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		String name = (String) expression.getElement(0).evaluate(rti).getValue();
-		int paramCount = (Integer) expression.getElement(2).evaluate(rti).getValue();
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		String name = (String) expression.getElement(0).evaluate(context).getValue();
+		int paramCount = (Integer) expression.getElement(2).evaluate(context).getValue();
+		Data res = new Data(expression, context);
 		res.setType(DataType.CODE_BOTH);
 		if (getEngine().isUDFDefined(name, paramCount)) {
 			res.setText("@True");

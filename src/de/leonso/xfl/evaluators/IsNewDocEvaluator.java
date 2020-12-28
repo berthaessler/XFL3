@@ -15,10 +15,10 @@ public class IsNewDocEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
 		res.setType(DataType.CODE_BOTH);
-		DocumentWrapper refDoc = rti.getRefDoc();
+		DocumentWrapper refDoc = context.getRefDoc();
 		if (refDoc.getLastModified() == null) {
 			res.setText("@True");
 		} else {

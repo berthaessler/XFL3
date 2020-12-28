@@ -21,11 +21,11 @@ public class TransformEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
-		Data listData = expression.getElement(0).evaluate(rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
+		Data listData = expression.getElement(0).evaluate(context);
 		res.addChild(listData);
-		Data varData = expression.getElement(1).evaluate(rti);
+		Data varData = expression.getElement(1).evaluate(context);
 		res.addChild(varData);
 
 		Object vlist = listData.getValue();
@@ -42,10 +42,10 @@ public class TransformEvaluator extends Evaluator {
 		for (int i = 0; i < list.length; i++) {
 			Object value = list[i];
 			res.assignValue(value);
-			rti.setVar(var, res); // Laufvariable setzen
+			context.setVar(var, res); // Laufvariable setzen
 
 			// Formel
-			Data ev = expression.getElement(2).evaluate(rti);
+			Data ev = expression.getElement(2).evaluate(context);
 			Object value2 = ev.getValue();
 
 			// alle Ergebnisse durchlaufen
@@ -59,7 +59,7 @@ public class TransformEvaluator extends Evaluator {
 				resList.add(value2);
 			}
 		}
-		res = new Data(expression, rti);
+		res = new Data(expression, context);
 		res.assignValue(resList);
 		return res;
 

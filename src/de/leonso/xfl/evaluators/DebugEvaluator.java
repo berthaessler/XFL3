@@ -13,8 +13,8 @@ public class DebugEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = expression.getElement(0).evaluate(rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = expression.getElement(0).evaluate(context);
 		Number value = (Number) res.getValue();
 		if (value.intValue() == 0) {
 			getEngine().setDebugMode(false);

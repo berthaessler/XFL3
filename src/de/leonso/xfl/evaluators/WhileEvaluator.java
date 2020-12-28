@@ -21,13 +21,13 @@ public class WhileEvaluator extends BlockEvaluator {
 	}
 
 	@Override
-	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context rti) throws Exception {
+	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context context) throws Exception {
 
 		Data dTemp = null;
 		Data res = defaultData;
 
 		// condition
-		dTemp = elements.get(0).evaluate(rti);
+		dTemp = elements.get(0).evaluate(context);
 		defaultData.addChild(dTemp);
 		boolean cond = dTemp.isTrue();
 
@@ -35,7 +35,7 @@ public class WhileEvaluator extends BlockEvaluator {
 
 			for (int i = 1; i < elements.size(); i++) {
 				try {
-					res = evalAndCheckGoto(expression, i, elements, defaultData, rti);
+					res = evalAndCheckGoto(expression, i, elements, defaultData, context);
 				} catch (InstructionPointerChangedException e) {
 					i = e.getNewInstructionPointer(); // instruction pointer
 														// umsetzen
@@ -43,7 +43,7 @@ public class WhileEvaluator extends BlockEvaluator {
 			}
 
 			// condition
-			dTemp = elements.get(0).evaluate(rti);
+			dTemp = elements.get(0).evaluate(context);
 			cond = dTemp.isTrue();
 
 			// aufräumen

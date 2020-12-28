@@ -16,13 +16,13 @@ public class GetDocFieldEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
-		String unid = (String) expression.getElement(0).evaluate(rti).getValue();
-		Data field = expression.getElement(1).evaluate(rti);
+		String unid = (String) expression.getElement(0).evaluate(context).getValue();
+		Data field = expression.getElement(1).evaluate(context);
 
-		Data res = new Data(expression, rti);
-		Document refDoc = rti.getRefDoc();
+		Data res = new Data(expression, context);
+		Document refDoc = context.getRefDoc();
 		Document doc = refDoc == null ? null : refDoc.getParentDatabase().getDocumentByUNID(unid);
 
 		if (doc == null) {

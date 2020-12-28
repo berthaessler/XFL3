@@ -23,29 +23,29 @@ public class TryEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
 		ArrayList<Expression> elements = expression.getElements();
 		Expression statement = elements.get(0);
 
 		try {
-			res.assignValue(statement.evaluate(rti).getValue());
+			res.assignValue(statement.evaluate(context).getValue());
 		} catch (Throwable e) {
 
 			// Fehler als Variable bereitstellen.
 			if (elements.size() > 1) {
-				Data errorVar = elements.get(1).evaluate(rti);
+				Data errorVar = elements.get(1).evaluate(context);
 				String varName = (String) errorVar.getValue();
-				Data error = new Data(expression, rti);
+				Data error = new Data(expression, context);
 				String message = LException.getRootMessage(e); // e.getMessage();
 				error.assignValue(UtilsString.isNullOrEmpty(message) ? e.getClass().getName() : message);
 				res.addChild(error);
-				rti.setObject(varName, error);
+				context.setObject(varName, error);
 
 				// Statement
 				if (elements.size() > 2) {
 					Expression statementError = elements.get(2);
-					res.assignValue(statementError.evaluate(rti).getValue());
+					res.assignValue(statementError.evaluate(context).getValue());
 				} else {
 					res.assignValue(message);
 				}
@@ -59,7 +59,7 @@ public class TryEvaluator extends Evaluator {
 			// optionales Finally-Statement
 			if (elements.size() > 3) {
 				Expression statementFinal = elements.get(3);
-				res.assignValue(statementFinal.evaluate(rti).getValue());
+				res.assignValue(statementFinal.evaluate(context).getValue());
 			}
 		}
 

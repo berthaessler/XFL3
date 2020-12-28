@@ -14,13 +14,13 @@ public class GetObjectEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		String name = (String) expression.getElement(0).evaluate(rti).getValue();
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		String name = (String) expression.getElement(0).evaluate(context).getValue();
 		Data res;
-		if (rti.hasObject(name)) {
-			res = rti.getObject(name);
+		if (context.hasObject(name)) {
+			res = context.getObject(name);
 		} else {
-			res = new Data(expression, rti);
+			res = new Data(expression, context);
 			res.setType(DataType.UNAVAILABLE);
 		}
 		return res;

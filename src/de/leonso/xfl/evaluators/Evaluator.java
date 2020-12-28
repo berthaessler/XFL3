@@ -20,7 +20,7 @@ public abstract class Evaluator implements Serializable {
 		return engine;
 	}
 
-	public abstract Data evaluate(Expression expression, Context rti) throws Exception;
+	public abstract Data evaluate(Expression expression, Context context) throws Exception;
 
 	/**
 	 * Routine zum Aufreaumen

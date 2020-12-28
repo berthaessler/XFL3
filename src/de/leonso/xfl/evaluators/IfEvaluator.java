@@ -16,10 +16,10 @@ public class IfEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
 		ArrayList<Expression> elements = expression.getElements();
-		Data res = new Data(expression, rti);
+		Data res = new Data(expression, context);
 		res.setType(DataType.UNAVAILABLE);
 		Data dTemp = null;
 
@@ -28,13 +28,13 @@ public class IfEvaluator extends Evaluator {
 		while ((i + 1 < elements.size())) {
 			try {
 				// Bedingung prüfen
-				dTemp = elements.get(i).evaluate(rti);
+				dTemp = elements.get(i).evaluate(context);
 			} catch (Exception e) {
 				throw e;
 			}
 			// res.addChild(dTemp);
 			if (dTemp.isTrue()) {
-				dTemp = elements.get(i + 1).evaluate(rti);
+				dTemp = elements.get(i + 1).evaluate(context);
 				res.addChild(dTemp);
 				dTemp.convertToVarItem();
 				return dTemp;
@@ -45,7 +45,7 @@ public class IfEvaluator extends Evaluator {
 
 		// letzter ELSE-Zweig (könnte auch fehlen)
 		if (i < elements.size()) {
-			dTemp = elements.get(i).evaluate(rti);
+			dTemp = elements.get(i).evaluate(context);
 			res.addChild(dTemp);
 			dTemp.convertToVarItem();
 		} else {

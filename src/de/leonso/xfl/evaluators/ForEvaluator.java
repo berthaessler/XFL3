@@ -21,7 +21,7 @@ public class ForEvaluator extends BlockEvaluator {
 	}
 
 	@Override
-	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context rti) throws Exception {
+	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context context) throws Exception {
 
 		Data dTemp = defaultData;
 		Data res = defaultData;
@@ -29,10 +29,10 @@ public class ForEvaluator extends BlockEvaluator {
 		boolean cond;
 		if (iStart == 0) {
 			// initialize
-			res = elements.get(0).evaluate(rti);
+			res = elements.get(0).evaluate(context);
 			// defaultData.addChild(res);
 			// condition
-			dTemp = elements.get(1).evaluate(rti);
+			dTemp = elements.get(1).evaluate(context);
 			// defaultData.addChild(dTemp);
 			cond = dTemp.isTrue();
 		} else {
@@ -42,7 +42,7 @@ public class ForEvaluator extends BlockEvaluator {
 
 			for (int i = iStart > 0 ? iStart : 3; i < elements.size(); i++) {
 				try {
-					dTemp = evalAndCheckGoto(expression, i, elements, defaultData, rti);
+					dTemp = evalAndCheckGoto(expression, i, elements, defaultData, context);
 				} catch (InstructionPointerChangedException e) {
 					i = e.getNewInstructionPointer(); // instruction pointer
 														// umsetzen
@@ -55,12 +55,12 @@ public class ForEvaluator extends BlockEvaluator {
 				cond = false;
 			}
 			// increment
-			res = elements.get(2).evaluate(rti);
+			res = elements.get(2).evaluate(context);
 			// defaultData.addChild(res);
 			// TODO check: convertToVarItem
 
 			// condition
-			dTemp = elements.get(1).evaluate(rti);
+			dTemp = elements.get(1).evaluate(context);
 			// defaultData.addChild(dTemp);
 			cond = dTemp.isTrue();
 

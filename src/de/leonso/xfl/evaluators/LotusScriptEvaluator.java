@@ -120,7 +120,7 @@ public class LotusScriptEvaluator extends Evaluator {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 		// jeder Parameter wird in eine Globale Variable konvertiert
 
 		Document pdoc = getTransportDoc();
@@ -152,7 +152,7 @@ public class LotusScriptEvaluator extends Evaluator {
 			pdoc.save();
 		}
 
-		Data res = new Data(expression, rti);
+		Data res = new Data(expression, context);
 		res.setType(DataType.UNAVAILABLE);
 
 		// alle globalen Variablen durchreichen
@@ -173,7 +173,7 @@ public class LotusScriptEvaluator extends Evaluator {
 			code += "(";
 			for (int i = 0; i < elements.size(); i++) {
 				Expression ex = elements.get(i);
-				Data data = ex.evaluate(rti);
+				Data data = ex.evaluate(context);
 				String varName = "J2LS_" + i;
 				code += (i > 0 ? "; " : "") + "GLOBAL " + varName;
 				pdoc.replaceItemValue("$global_" + varName, data.getValue());
@@ -182,7 +182,7 @@ public class LotusScriptEvaluator extends Evaluator {
 		}
 
 		// Dokument-Referenz mitgeben
-		Document refDoc = rti.getRefDoc();
+		Document refDoc = context.getRefDoc();
 		if (refDoc != null) {
 			String nid = refDoc.getNoteID();
 			if (!"0".equals(nid)) {

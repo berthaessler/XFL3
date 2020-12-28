@@ -13,7 +13,7 @@ public class XflBindingFactory implements BindingFactory {
 		return "xfl";
 	}
 
-	public MethodBinding createMethodBinding(Application app, String expr, Class[] obj) {
+	public MethodBinding createMethodBinding(Application app, String expr, @SuppressWarnings("rawtypes") Class[] obj) {
 		String script = ValueBindingUtil.parseSimpleExpression(expr);
 		return new XflMethodBinding(script);
 	}

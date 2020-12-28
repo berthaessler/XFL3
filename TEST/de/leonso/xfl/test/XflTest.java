@@ -132,7 +132,7 @@ public class XflTest {
 			}
 			
 			@Override
-			public Object evaluate(Context rti, String formulaName, Object... args) throws Exception {
+			public Object evaluate(Context context, String formulaName, Object... args) throws Exception {
 				Object msg = args[0];
 				System.out.println(msg);
 				return msg;
@@ -610,7 +610,7 @@ public class XflTest {
 			}
 			
 			@Override
-			public Object evaluate(Context rti, String formulaName, Object... args) throws Exception {
+			public Object evaluate(Context context, String formulaName, Object... args) throws Exception {
 				String arg1 = (String) args[0];
 				System.out.println("LogText: " + arg1);
 				return arg1.toUpperCase();
@@ -927,7 +927,7 @@ public class XflTest {
 			}
 			
 			@Override
-			public Object evaluate(Context rti, String formulaName, Object... args) throws Exception {
+			public Object evaluate(Context context, String formulaName, Object... args) throws Exception {
 				Object obj = args[0];
 				System.out.println(obj);
 				return null;

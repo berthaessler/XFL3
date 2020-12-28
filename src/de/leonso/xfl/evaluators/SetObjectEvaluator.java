@@ -14,15 +14,15 @@ public class SetObjectEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
-		String var = (String) expression.getElement(0).evaluate(rti).getValue();
+		String var = (String) expression.getElement(0).evaluate(context).getValue();
 
-		Data res = expression.getElement(1).evaluate(rti);
+		Data res = expression.getElement(1).evaluate(context);
 		if (res.getType() == DataType.UNAVAILABLE) {
-			rti.removeObject(var);
+			context.removeObject(var);
 		} else {
-			rti.setObject(var, res);
+			context.setObject(var, res);
 		}
 
 		return res;

@@ -21,8 +21,8 @@ public class ConstantEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws EvaluationException {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws EvaluationException {
+		Data res = new Data(expression, context);
 		res.assignCodeConstant(DataType.CODE_BOTH, expression.getTitle());
 		return res;
 	}

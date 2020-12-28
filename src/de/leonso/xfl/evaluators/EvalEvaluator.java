@@ -13,11 +13,11 @@ public class EvalEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = expression.getElement(0).evaluate(rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = expression.getElement(0).evaluate(context);
 		String code = (String) res.getValue();
-		res = new Data(expression, rti);
-		res.assignValue(getEngine().eval(code, rti.getRefDoc()));
+		res = new Data(expression, context);
+		res.assignValue(getEngine().eval(code, context.getRefDoc()));
 		return res;
 	}
 

@@ -14,11 +14,11 @@ public class ErrorEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Integer errNum = ((Number) expression.getElement(0).evaluate(rti).getValue()).intValue();
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Integer errNum = ((Number) expression.getElement(0).evaluate(context).getValue()).intValue();
 		String errMsg = null;
 		if (expression.getElements().size() > 1) {
-			errMsg = (String) expression.getElement(1).evaluate(rti).getValue();
+			errMsg = (String) expression.getElement(1).evaluate(context).getValue();
 		}
 		throw new ErrorException(getEngine(), expression, errNum, errMsg);
 	}

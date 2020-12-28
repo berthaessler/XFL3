@@ -10,9 +10,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import de.leonso.xfl.Context;
 import de.leonso.xfl.Data;
 import de.leonso.xfl.Expression;
-import de.leonso.xfl.Context;
 import de.leonso.xfl.XflEngine;
 
 /* @formatter:off */
@@ -60,43 +60,43 @@ public class PromptEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
 		ArrayList<Expression> elements = expression.getElements();
-		Data data = elements.get(0).evaluate(rti);
+		Data data = elements.get(0).evaluate(context);
 		String text = data.getText();
 		Object value;
 
 		if (PROMPT_OK.equalsIgnoreCase(text)) {
-			value = promptOK(elements, rti);
+			value = promptOK(elements, context);
 
 		} else if (PROMPT_YESNO.equalsIgnoreCase(text)) {
-			value = promptYesNo(elements, rti);
+			value = promptYesNo(elements, context);
 
 		} else if (PROMPT_YESNOCANCEL.equalsIgnoreCase(text)) {
-			value = promptYesNoCancel(elements, rti);
+			value = promptYesNoCancel(elements, context);
 			// int i = (Integer) value;
 			// if ((-1) == i) {
 			// in LotusScript gibt es ein Flag DoNotQuitOnCancel.
 			// Das könnten wir hier auch einführen
-			// throw new CancelException(expression, rti);
+			// throw new CancelException(expression, context);
 			// }
 
 		} else if (PROMPT_OKCANCELEDIT.equalsIgnoreCase(text)) {
-			value = promptOKCancelEdit(elements, rti);
+			value = promptOKCancelEdit(elements, context);
 
 		} else if (PROMPT_OKCANCELLIST.equalsIgnoreCase(text)) {
-			value = promptOKCancelList(elements, rti);
+			value = promptOKCancelList(elements, context);
 			// if (!(value instanceof String)) {
 			// in LotusScript gibt es ein Flag DoNotQuitOnCancel.
-			// throw new CancelException(expression, rti);
+			// throw new CancelException(expression, context);
 			// }
 
 		} else if (PROMPT_OKCANCELCOMBO.equalsIgnoreCase(text)) {
-			value = promptOKCancelCombo(elements, rti);
+			value = promptOKCancelCombo(elements, context);
 			// if (!(value instanceof String)) {
 			// in LotusScript gibt es ein Flag DoNotQuitOnCancel.
-			// throw new CancelException(expression, rti);
+			// throw new CancelException(expression, context);
 			// }
 
 		} else if (PROMPT_OKCANCELEDITCOMBO.equalsIgnoreCase(text)) {
@@ -106,10 +106,10 @@ public class PromptEvaluator extends Evaluator {
 			throw new Exception("Option '" + text + "' wird von @Prompt nicht unterstützt");
 
 		} else if (PROMPT_PASSWORD.equalsIgnoreCase(text)) {
-			value = promptPassword(elements, rti);
+			value = promptPassword(elements, context);
 			// if (!(value instanceof String)) {
 			// in LotusScript gibt es ein Flag DoNotQuitOnCancel.
-			// throw new CancelException(expression, rti);
+			// throw new CancelException(expression, context);
 			// }
 
 		} else {
@@ -121,10 +121,10 @@ public class PromptEvaluator extends Evaluator {
 		return res;
 	}
 
-	private Object promptOK(ArrayList<Expression> elements, Context rti) throws ScriptException {
-		Data data = elements.get(1).evaluate(rti);
+	private Object promptOK(ArrayList<Expression> elements, Context context) throws ScriptException {
+		Data data = elements.get(1).evaluate(context);
 		final String title = (String) data.getValue();
-		data = elements.get(2).evaluate(rti);
+		data = elements.get(2).evaluate(context);
 		final String prompt = (String) data.getValue();
 
 		// final JFrame frame = new JFrame();
@@ -135,10 +135,10 @@ public class PromptEvaluator extends Evaluator {
 		return 1; // so ist es in Notes
 	}
 
-	private Object promptYesNo(ArrayList<Expression> elements, Context rti) throws ScriptException {
-		Data data = elements.get(1).evaluate(rti);
+	private Object promptYesNo(ArrayList<Expression> elements, Context context) throws ScriptException {
+		Data data = elements.get(1).evaluate(context);
 		String title = (String) data.getValue();
-		data = elements.get(2).evaluate(rti);
+		data = elements.get(2).evaluate(context);
 		String prompt = (String) data.getValue();
 
 		int n = openDialog(title, prompt, JOptionPane.YES_NO_OPTION);
@@ -151,10 +151,10 @@ public class PromptEvaluator extends Evaluator {
 		}
 	}
 
-	private Object promptYesNoCancel(ArrayList<Expression> elements, Context rti) throws ScriptException {
-		Data data = elements.get(1).evaluate(rti);
+	private Object promptYesNoCancel(ArrayList<Expression> elements, Context context) throws ScriptException {
+		Data data = elements.get(1).evaluate(context);
 		String title = (String) data.getValue();
-		data = elements.get(2).evaluate(rti);
+		data = elements.get(2).evaluate(context);
 		String prompt = (String) data.getValue();
 
 		// int n = JOptionPane.showConfirmDialog(frame, prompt, title, JOptionPane.YES_NO_CANCEL_OPTION);
@@ -266,14 +266,14 @@ public class PromptEvaluator extends Evaluator {
 		return n;
 	}
 
-	private Object promptOKCancelEdit(ArrayList<Expression> elements, Context rti) throws ScriptException {
-		Data data = elements.get(1).evaluate(rti);
+	private Object promptOKCancelEdit(ArrayList<Expression> elements, Context context) throws ScriptException {
+		Data data = elements.get(1).evaluate(context);
 		String title = (String) data.getValue();
-		data = elements.get(2).evaluate(rti);
+		data = elements.get(2).evaluate(context);
 		String prompt = (String) data.getValue();
 		String defaultValue;
 		if (elements.size() > 3) {
-			data = elements.get(3).evaluate(rti);
+			data = elements.get(3).evaluate(context);
 			defaultValue = (String) data.getValue();
 		} else {
 			defaultValue = "";
@@ -286,14 +286,14 @@ public class PromptEvaluator extends Evaluator {
 		return s;
 	}
 
-	private Object promptOKCancelCombo(ArrayList<Expression> elements, Context rti) throws ScriptException {
-		Data data = elements.get(1).evaluate(rti);
+	private Object promptOKCancelCombo(ArrayList<Expression> elements, Context context) throws ScriptException {
+		Data data = elements.get(1).evaluate(context);
 		String title = (String) data.getValue();
-		data = elements.get(2).evaluate(rti);
+		data = elements.get(2).evaluate(context);
 		String prompt = (String) data.getValue();
 		String defaultValue;
 		if (elements.size() > 3) {
-			data = elements.get(3).evaluate(rti);
+			data = elements.get(3).evaluate(context);
 			defaultValue = (String) data.getValue();
 		} else {
 			defaultValue = "";
@@ -301,7 +301,7 @@ public class PromptEvaluator extends Evaluator {
 		Object[] options = null;
 		List<String> list = null;
 		if (elements.size() > 4) {
-			data = elements.get(4).evaluate(rti);
+			data = elements.get(4).evaluate(context);
 			Object values = data.getValue();
 			if (values instanceof Object[]) {
 				options = (Object[]) values;
@@ -330,10 +330,10 @@ public class PromptEvaluator extends Evaluator {
 		return sel;
 	}
 
-	private Object promptPassword(ArrayList<Expression> elements, Context rti) throws ScriptException {
-		Data data = elements.get(1).evaluate(rti);
+	private Object promptPassword(ArrayList<Expression> elements, Context context) throws ScriptException {
+		Data data = elements.get(1).evaluate(context);
 		String title = (String) data.getValue();
-		data = elements.get(2).evaluate(rti);
+		data = elements.get(2).evaluate(context);
 		String prompt = (String) data.getValue();
 
 		String pw = PromptPassword.createAndShowGUI(title, prompt);
@@ -341,14 +341,14 @@ public class PromptEvaluator extends Evaluator {
 		return pw == null ? -1 : pw;
 	}
 
-	private Object promptOKCancelList(ArrayList<Expression> elements, Context rti) throws ScriptException {
-		Data data = elements.get(1).evaluate(rti);
+	private Object promptOKCancelList(ArrayList<Expression> elements, Context context) throws ScriptException {
+		Data data = elements.get(1).evaluate(context);
 		String title = (String) data.getValue();
-		data = elements.get(2).evaluate(rti);
+		data = elements.get(2).evaluate(context);
 		String prompt = (String) data.getValue();
 		String defaultValue;
 		if (elements.size() > 3) {
-			data = elements.get(3).evaluate(rti);
+			data = elements.get(3).evaluate(context);
 			defaultValue = (String) data.getValue();
 		} else {
 			defaultValue = "";
@@ -356,7 +356,7 @@ public class PromptEvaluator extends Evaluator {
 
 		final List<String> list = new ArrayList<String>();
 		if (elements.size() > 4) {
-			data = elements.get(4).evaluate(rti);
+			data = elements.get(4).evaluate(context);
 			Object values = data.getValue();
 			if (values instanceof Object[]) {
 				Object[] options = (Object[]) values;

@@ -44,12 +44,12 @@ public class NotesFormulaEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
 		ArrayList<Expression> elements = expression.getElements();
 		String title = expression.getTitle();
 
-		Data res = new Data(expression, rti);
+		Data res = new Data(expression, context);
 		res.setType(refDocFunctions.contains(title) ? DataType.CODE_REF : DataType.CODE_BOTH);
 
 		StringBuilder sb = new StringBuilder();
@@ -69,7 +69,7 @@ public class NotesFormulaEvaluator extends Evaluator {
 			} else {
 				sb.append("(");
 			}
-			Data dTemp = e.evaluate(rti);
+			Data dTemp = e.evaluate(context);
 			dTemp = res.addChild(dTemp); // evtl. wird dabei Kopie erzeugt
 			sb.append(dTemp.getText()); // Bei TRUE wird alles als Text geholt
 		}

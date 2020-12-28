@@ -17,13 +17,13 @@ public class BinaryOperatorEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
 		res.setType(DataType.CODE_BOTH);
 		ArrayList<Expression> elements = expression.getElements();
 		if (elements.size() == 1) {
 			Expression xTemp = elements.get(0);
-			Data ev = xTemp.evaluate(rti);
+			Data ev = xTemp.evaluate(context);
 			String text;
 			try {
 				text = res.addChild(ev).getText();
@@ -37,7 +37,7 @@ public class BinaryOperatorEvaluator extends Evaluator {
 			while (xTemp.getSubType() == expression.getSubType()) {
 				xTemp = xTemp.getElement(0);
 			}
-			Data dTemp = xTemp.evaluate(rti);
+			Data dTemp = xTemp.evaluate(context);
 			String text;
 			try {
 				text = res.addChild(dTemp).getText();
@@ -49,7 +49,7 @@ public class BinaryOperatorEvaluator extends Evaluator {
 			while (xTemp != expression) {
 				xTemp = xTemp.getParent();
 				// rechte Seite evaluieren
-				dTemp = xTemp.getElement(1).evaluate(rti);
+				dTemp = xTemp.getElement(1).evaluate(context);
 				try {
 					text = res.addChild(dTemp).getText();
 				} catch (Throwable e) {

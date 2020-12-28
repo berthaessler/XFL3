@@ -27,8 +27,8 @@ public class ExecuteEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Object test = expression.getElement(0).evaluate(rti).getValue();
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Object test = expression.getElement(0).evaluate(context).getValue();
 		String code;
 		if (test instanceof String) {
 			code = (String) test;
@@ -93,7 +93,7 @@ public class ExecuteEvaluator extends Evaluator {
 
 		LLotusScriptEvaluator evaluator = new LLotusScriptEvaluator(app);
 		String lsResult = (String) evaluator.evaluate(code);
-		Data data = new Data(expression, rti);
+		Data data = new Data(expression, context);
 		data.assignValue(lsResult);
 		return data;
 	}

@@ -29,7 +29,7 @@ public class XflMethodBinding extends MethodBindingEx {
 	}
 
 	@Override
-	public Class getType(FacesContext context) throws MethodNotFoundException {
+	public Class<?> getType(FacesContext context) throws MethodNotFoundException {
 		return null;
 	}
 

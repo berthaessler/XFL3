@@ -14,11 +14,11 @@ public class HtmlEncodeEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data data = expression.getElement(0).evaluate(rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data data = expression.getElement(0).evaluate(context);
 		Object value = data.getValue();
 		if (value instanceof String) {
-			Data res = new Data(expression, rti);
+			Data res = new Data(expression, context);
 			String convert = UtilsString.textToHtml((String) value);
 			res.assignValue(convert);
 			return res;

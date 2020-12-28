@@ -14,7 +14,7 @@ public class GotoEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
 		// aufräumen
 		getEngine().removeUnusedItems();

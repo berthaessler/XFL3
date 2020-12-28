@@ -16,13 +16,13 @@ public class LogicalOperatorEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data res = new Data(expression, rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data res = new Data(expression, context);
 		res.setType(DataType.CODE_BOTH);
 		ArrayList<Expression> elements = expression.getElements();
 		if (elements.size() == 1) { // NOT-Operator
 			Expression xTemp = elements.get(0);
-			Data ev = xTemp.evaluate(rti);
+			Data ev = xTemp.evaluate(context);
 			Number value = (Number) res.addChild(ev).getValue();
 			res.changeFormula(expression.getTitle() + (value.intValue() == 0 ? "@FALSE" : "@TRUE"));
 		} else {
@@ -34,14 +34,14 @@ public class LogicalOperatorEvaluator extends Evaluator {
 			while ((xTemp.getSubType() == expression.getSubType()) && (xTemp.getTitle().equals("&") || xTemp.getTitle().equals("|"))) {
 				xTemp = xTemp.getElement(0);
 			}
-			res = xTemp.evaluate(rti);
+			res = xTemp.evaluate(context);
 			boolean cond_resolved;
 			if (res.getType() != DataType.UNAVAILABLE) {
 				String code = res.getText();
 				Object value = res.getValue(); // bei @Error-Items = null
 				Object ValOhneKomma = value instanceof Number ? ((Number) value).intValue() : code;
 				// res.close();
-				res = new Data(expression, rti);
+				res = new Data(expression, context);
 				res.setType(DataType.CODE_BOTH);
 				res.changeFormula(ValOhneKomma + " | 0"); // Fehler bei falschen
 															// Datentypen
@@ -113,13 +113,13 @@ public class LogicalOperatorEvaluator extends Evaluator {
 					}
 
 					if (!cond_resolved) {
-						res = xTemp.getElement(1).evaluate(rti);
+						res = xTemp.getElement(1).evaluate(context);
 						if (res.getType() != DataType.UNAVAILABLE) {
 							res.convertToVarItem();
 							value = res.getValue();
 							ValOhneKomma = value instanceof Number ? ((Number) value).intValue() : code;
 							// res.close();
-							res = new Data(expression, rti);
+							res = new Data(expression, context);
 							res.setType(DataType.CODE_BOTH);
 							// Fehler bei falschen Datentypen erzwingen
 							res.changeFormula(ValOhneKomma + " | 0");

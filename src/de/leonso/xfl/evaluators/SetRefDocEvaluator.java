@@ -14,13 +14,13 @@ public class SetRefDocEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Data data = expression.getElement(0).evaluate(rti);
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Data data = expression.getElement(0).evaluate(context);
 		Object doc = data.getObject();
 		if (!(doc instanceof DocumentWrapper)) {
 			throw new IllegalArgumentException("Es muss ein Objekt der Klasse Document übergeben werden");
 		}
-		rti.setRefDoc((DocumentWrapper) doc);
+		context.setRefDoc((DocumentWrapper) doc);
 		return data;
 	}
 

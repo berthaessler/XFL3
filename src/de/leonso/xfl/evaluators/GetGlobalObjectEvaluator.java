@@ -14,14 +14,14 @@ public class GetGlobalObjectEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		String name = (String) expression.getElement(0).evaluate(rti).getValue();
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		String name = (String) expression.getElement(0).evaluate(context).getValue();
 		Data res;
 		XflEngine engine = getEngine();
 		if (engine.hasGlobalObject(name)) {
 			res = engine.getGlobalObjectWrapper(name);
 		} else {
-			res = new Data(expression, rti);
+			res = new Data(expression, context);
 			res.setType(DataType.UNAVAILABLE);
 		}
 		return res;

@@ -7,7 +7,7 @@ import de.leonso.xfl.Context;
 public class CancelException extends EvaluationException {
 	private static final long serialVersionUID = 1L;
 
-	public CancelException(Expression exp, Context rti) {
+	public CancelException(Expression exp, Context context) {
 		super(exp.getEngine(), exp);
 	}
 

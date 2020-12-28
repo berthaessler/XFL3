@@ -2,10 +2,10 @@ package de.leonso.xfl.evaluators;
 
 import java.util.ArrayList;
 
+import de.leonso.xfl.Context;
 import de.leonso.xfl.Data;
 import de.leonso.xfl.DataType;
 import de.leonso.xfl.Expression;
-import de.leonso.xfl.Context;
 import de.leonso.xfl.XflEngine;
 import de.leonso.xfl.exceptions.EvaluationException;
 import de.leonso.xfl.exceptions.EvaluatorNotFoundException;
@@ -20,7 +20,7 @@ public class AlphanumEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
 		Data res = null;
 		Document refDoc = null;
@@ -33,8 +33,8 @@ public class AlphanumEvaluator extends Evaluator {
 				if (engine.hasGlobalObject(title)) {
 					res = engine.getGlobalObjectWrapper(title);
 				}
-			} else if (rti.hasObject(title)) {
-				res = rti.getObject(title);
+			} else if (context.hasObject(title)) {
+				res = context.getObject(title);
 			} else if (engine.hasGlobalObject(title)) {
 				res = engine.getGlobalObjectWrapper(title);
 			}
@@ -46,7 +46,7 @@ public class AlphanumEvaluator extends Evaluator {
 		if (!expression.isOriginal() && engine.isAliasDefined(title)) {
 			String save = title;
 			expression.setTitle(engine.getAlias(title)); // alias eintragen
-			res = expression.evaluate(rti);
+			res = expression.evaluate(context);
 			expression.setTitle(save); // Urzustand herstellen
 			return res;
 		}
@@ -54,18 +54,18 @@ public class AlphanumEvaluator extends Evaluator {
 		switch (expression.getSubType()) {
 		case NUMBER:
 		case STRING:
-			return evaluateConstant(expression, rti);
+			return evaluateConstant(expression, context);
 
 		case FUNCTION:
 			if (!expression.isOriginal() && engine.isUDFDefined(title, elements.size())) {
 				Expression udf = engine.getUDF(title, elements.size());
 				Expression tmpRoot = udf.getElement(1);
-				Context tmpRti = engine.createContext(tmpRoot, rti.getRefDoc());
+				Context tmpRti = engine.createContext(tmpRoot, context.getRefDoc());
 				// Parameter uebergeben
 				if (elements.size() > 0) {
 					for (int i = 0; i < elements.size(); i++) {
 						Expression exp = elements.get(i);
-						res = exp.evaluate(rti);
+						res = exp.evaluate(context);
 						String name = udf.getElement(0).getElement(i).getTitle();
 						if (res.getType() == DataType.OBJECT) {
 							tmpRti.setObject(name, res);
@@ -77,7 +77,7 @@ public class AlphanumEvaluator extends Evaluator {
 				try {
 					try {
 						Data tmpRes = tmpRoot.evaluate(tmpRti);
-						res = new Data(expression, rti);
+						res = new Data(expression, context);
 						res.assignItem(tmpRes.getItem()); // in aktuelle RTI
 															// umspeichern
 					} catch (ReturnException e) {
@@ -96,7 +96,7 @@ public class AlphanumEvaluator extends Evaluator {
 				}
 
 				try {
-					return ev.evaluate(expression, rti);
+					return ev.evaluate(expression, context);
 				} catch (EvaluationException e) {
 					throw e;
 				} catch (Throwable e) {
@@ -110,29 +110,29 @@ public class AlphanumEvaluator extends Evaluator {
 				if (engine.isUDFDefined(title, elements.size())) {
 					engine.removeUDF(title, elements.size());
 				}
-				res = new Data(expression, rti);
+				res = new Data(expression, context);
 				res.setType(DataType.UNAVAILABLE);
 				return res;
 			} else if (expression.isGlobal()) {
 				if (engine.hasGlobalVar(title)) {
 					return engine.getGlobalVar(title);
 				} else {
-					res = new Data(expression, rti);
+					res = new Data(expression, context);
 					res.setType(DataType.UNAVAILABLE);
 					return res;
 				}
 
 			} else if (expression.isField()) {
-				refDoc = rti.getRefDoc();
+				refDoc = context.getRefDoc();
 				if (refDoc != null) {
 					if (refDoc.hasItem(title)) {
-						res = new Data(expression, rti);
+						res = new Data(expression, context);
 						res.assignItem(refDoc.getFirstItem(title));
 						return res;
 					}
 				}
 			} else if (expression.isEnvironment()) {
-				res = new Data(expression, rti);
+				res = new Data(expression, context);
 				res.assignValue(engine.getSession().getEnvironmentValue(title));
 				return res;
 			} else {
@@ -140,11 +140,11 @@ public class AlphanumEvaluator extends Evaluator {
 					// Neue Instanz des Funktionsbaums
 					Expression udf = engine.getUDF(title, elements.size());
 					Expression tmpRoot = udf.getElement(1);
-					Context tmpRti = engine.createContext(tmpRoot, rti.getRefDoc());
+					Context tmpRti = engine.createContext(tmpRoot, context.getRefDoc());
 					try {
 						try {
 							Data tmpRes = tmpRoot.evaluate(tmpRti);
-							res = new Data(expression, rti);
+							res = new Data(expression, context);
 							res.assignItem(tmpRes.getItem()); // umspeichern in
 																// aktuelle RTI
 						} catch (ReturnException e) {
@@ -162,11 +162,11 @@ public class AlphanumEvaluator extends Evaluator {
 																// haben
 
 				if (ev != null) {
-					return ev.evaluate(expression, rti);
-				} else if (rti.hasVar(title)) {
-					return rti.getVar(title);
-				} else if (rti.hasObject(title)) {
-					return rti.getObject(title);
+					return ev.evaluate(expression, context);
+				} else if (context.hasVar(title)) {
+					return context.getVar(title);
+				} else if (context.hasObject(title)) {
+					return context.getObject(title);
 				} else if (engine.hasGlobalVar(title)) {
 					Data globalVar = engine.getGlobalVar(title);
 					// Achtung kann auch versehentlich ein OBJECT sein!
@@ -174,7 +174,7 @@ public class AlphanumEvaluator extends Evaluator {
 					// case ITEM_VAR:
 					// Wir kopieren diese Variable in den lokalen
 					// Variablenspeicher
-					// res = new Data(expression, rti);
+					// res = new Data(expression, context);
 					// res.assignItem(globalVar.getItem());
 					// return res;
 					// default:
@@ -183,10 +183,10 @@ public class AlphanumEvaluator extends Evaluator {
 				} else if (engine.hasGlobalObject(title)) {
 					return engine.getGlobalObjectWrapper(title);
 				}
-				refDoc = rti.getRefDoc();
+				refDoc = context.getRefDoc();
 				if (refDoc != null) {
 					if (refDoc.hasItem(title)) {
-						res = new Data(expression, rti);
+						res = new Data(expression, context);
 						res.assignItem(refDoc.getFirstItem(title));
 						return res;
 					}
@@ -195,7 +195,7 @@ public class AlphanumEvaluator extends Evaluator {
 			}
 
 			// weder Formel noch Feld
-			res = new Data(expression, rti);
+			res = new Data(expression, context);
 			res.setType(DataType.UNAVAILABLE);
 			return res;
 
@@ -205,8 +205,8 @@ public class AlphanumEvaluator extends Evaluator {
 
 	}
 
-	private Data evaluateConstant(Expression expression, Context rti) throws EvaluationException {
-		Data res = new Data(expression, rti);
+	private Data evaluateConstant(Expression expression, Context context) throws EvaluationException {
+		Data res = new Data(expression, context);
 		String str = expression.getTitle();
 		res.assignCodeConstant(DataType.CODE_BOTH, str);
 		return res;

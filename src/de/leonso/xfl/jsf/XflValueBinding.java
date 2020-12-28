@@ -33,7 +33,7 @@ public class XflValueBinding extends ValueBindingEx {
 	}
 
 	@Override
-	public Class getType(FacesContext context) throws EvaluationException, PropertyNotFoundException {
+	public Class<Object> getType(FacesContext context) throws EvaluationException, PropertyNotFoundException {
 		return Object.class;
 	}
 }

@@ -24,7 +24,7 @@ public class AssignmentEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
 		Data res;
 
@@ -38,16 +38,16 @@ public class AssignmentEvaluator extends Evaluator {
 			temp = engine.getAlias(temp);
 		}
 		if (e1.isField()) {
-			Document refDoc = rti.getRefDoc();
+			Document refDoc = context.getRefDoc();
 			if (e1.isDefault() && refDoc.hasItem(temp)) {
 				// DEFAULT braucht hier nix zu tun, weil schon Wert existiert
 				// Was gibt DEFAULT zurueck? Unter R6 nix, DEFAULT kann nicht
 				// verschachtelt werden, a := DEFAULT b := "1";
-				res = new Data(expression, rti);
+				res = new Data(expression, context);
 				res.assignItem(refDoc.getFirstItem(temp));
 				// damit sind wir besser als Notes ;-)
 			} else {
-				res = expression.getElement(1).evaluate(rti);
+				res = expression.getElement(1).evaluate(context);
 				if (res.getType() == DataType.UNAVAILABLE) {
 					refDoc.removeItem(temp);
 				} else {
@@ -57,10 +57,10 @@ public class AssignmentEvaluator extends Evaluator {
 		} else if (e1.isDefinedFunction()) {// isField
 			// verschiede Signaturen zulassen
 			engine.setUDF(temp, expression);
-			res = new Data(expression, rti);
+			res = new Data(expression, context);
 			res.setType(DataType.UNAVAILABLE);
 		} else if (e1.isGlobal()) {
-			res = expression.getElement(1).evaluate(rti);
+			res = expression.getElement(1).evaluate(context);
 			if (e1.isObject() || res.getType() == DataType.OBJECT) {
 				if (res.getType() == DataType.UNAVAILABLE) {
 					if (engine.hasGlobalObject(temp)) {
@@ -81,41 +81,41 @@ public class AssignmentEvaluator extends Evaluator {
 				}
 			}
 		} else if (e1.isEnvironment()) {// isField
-			res = expression.getElement(1).evaluate(rti);
+			res = expression.getElement(1).evaluate(context);
 			Object vTemp = res.getValue();
 			engine.getSession().setEnvironmentVar(temp, vTemp);
 			// R6-kompatibel
 		} else if (e1.isObject()) { // isField
-			res = expression.getElement(1).evaluate(rti);
+			res = expression.getElement(1).evaluate(context);
 			if (res.getType() == DataType.UNAVAILABLE) {
-				if (rti.hasObject(temp)) {
-					rti.removeObject(temp);
+				if (context.hasObject(temp)) {
+					context.removeObject(temp);
 				}
 			} else {
-				rti.setObject(temp, res);
+				context.setObject(temp, res);
 			}
 		} else if (e1.getType() == Type.LIST_SUBSCRIPT) { // das kann SFL nicht
 															// ;-)
-			res = e1.getElement(0).evaluate(rti).convertToVarItem();
+			res = e1.getElement(0).evaluate(context).convertToVarItem();
 			@SuppressWarnings("unchecked")
 			Vector<Object> values = res.getItem().getValues();
-			Integer index1 = (Integer) e1.getElement(1).evaluate(rti).getValue();
+			Integer index1 = (Integer) e1.getElement(1).evaluate(context).getValue();
 			int i = index1 - 1;
 			if (values.size() < i) {
 				throw new SubscriptOutOfRangeException(getEngine(), expression, index1);
 			}
-			Object value = expression.getElement(1).evaluate(rti).getValue();
+			Object value = expression.getElement(1).evaluate(context).getValue();
 			values.set(i, value);
 			res.assignValue(values);
-			rti.setVar(res.getItem().getName(), res);
+			context.setVar(res.getItem().getName(), res);
 		} else if (e1.isAlias()) {
 			engine.setAlias(temp, expression.getElement(1).getTitle());
-			res = new Data(expression, rti);
+			res = new Data(expression, context);
 			res.setType(DataType.UNAVAILABLE);
 		} else if (e1.getSubType() == SubType.OPERATOR_DOT) { // o.method := x
-			Object oTemp = e1.getElement(0).evaluate(rti).getObject();
+			Object oTemp = e1.getElement(0).evaluate(context).getObject();
 			String method = e1.getElement(1).getTitle();
-			Object v = expression.getElement(1).evaluate(rti).getValue();
+			Object v = expression.getElement(1).evaluate(context).getValue();
 			// wir versuchen es ueber den Setter
 			// o.value := "xyz" -> o.setValue("xyz")
 			Method m = Utils.getMethod(oTemp, "set" + method, v);
@@ -141,7 +141,7 @@ public class AssignmentEvaluator extends Evaluator {
 							korr = v;
 						}
 						Item item = doc.replaceItemValue(method, korr);
-						res = new Data(expression, rti);
+						res = new Data(expression, context);
 						res.assignObject(item);
 						return res;
 					}
@@ -149,24 +149,24 @@ public class AssignmentEvaluator extends Evaluator {
 				}
 			}
 			Utils.invokeMethod(oTemp, m, v);
-			res = new Data(expression, rti);
+			res = new Data(expression, context);
 			res.assignValue(null);
 
 		} else { // local var
-			res = expression.getElement(1).evaluate(rti);
+			res = expression.getElement(1).evaluate(context);
 			if (res.getType() == DataType.UNAVAILABLE) {
-				if (rti.hasVar(temp)) {
-					rti.removeVar(temp);
+				if (context.hasVar(temp)) {
+					context.removeVar(temp);
 				}
 			} else {
 				if (res.getType() == DataType.OBJECT) {
-					rti.setObject(temp, res);
+					context.setObject(temp, res);
 				} else {
 					// Achtung! Kopie erzeugen!
 					Data resOrg = res;
-					res = new Data(expression, rti);
+					res = new Data(expression, context);
 					res.assignItem(resOrg.getItem());
-					rti.setVar(temp, res);
+					context.setVar(temp, res);
 				}
 			}
 		}

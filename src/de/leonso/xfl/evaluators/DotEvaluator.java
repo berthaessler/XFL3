@@ -29,8 +29,8 @@ public class DotEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
-		Object o = expression.getElement(0).evaluate(rti).getObject();
+	public Data evaluate(Expression expression, Context context) throws Exception {
+		Object o = expression.getElement(0).evaluate(context).getObject();
 		if (o == null) {
 			throw new ObjectVariableNotSetException(getEngine(), expression);
 		}
@@ -40,7 +40,7 @@ public class DotEvaluator extends Evaluator {
 		List<Class<?>> classList = new ArrayList<Class<?>>();
 		List<Object> argsList = new ArrayList<Object>();
 		for (Expression ex : params) {
-			Object value = ex.evaluate(rti).getValue();
+			Object value = ex.evaluate(context).getValue();
 			argsList.add(value);
 			Class<? extends Object> c = value == null ? null : value.getClass();
 			// if (c.equals(Object[].class)) {
@@ -84,7 +84,7 @@ public class DotEvaluator extends Evaluator {
 					if (o instanceof Document && params.size() <= 1) { // doc.Feldname
 						Document doc = (Document) o;
 						Vector<?> value = doc.getItemValue(title);
-						Data res = new Data(expression, rti);
+						Data res = new Data(expression, context);
 						if (value.size() == 0) {
 							res.assignValue("");
 						} else if (value.size() == 1) {
@@ -109,7 +109,7 @@ public class DotEvaluator extends Evaluator {
 		}
 		Object[] args = argsList.toArray();
 		Object inv = Utils.invokeMethod(o, method, args);
-		Data res = new Data(expression, rti);
+		Data res = new Data(expression, context);
 		res.assignValue(inv);
 		return res;
 	}

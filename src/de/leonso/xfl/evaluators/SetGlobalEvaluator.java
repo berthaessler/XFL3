@@ -14,12 +14,12 @@ public class SetGlobalEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
-		String var = (String) expression.getElement(0).evaluate(rti).getValue();
+		String var = (String) expression.getElement(0).evaluate(context).getValue();
 		XflEngine engine = getEngine();
 
-		Data res = expression.getElement(1).evaluate(rti);
+		Data res = expression.getElement(1).evaluate(context);
 
 		if (res.getType() == DataType.UNAVAILABLE) {
 			engine.removeGlobalVar(var);

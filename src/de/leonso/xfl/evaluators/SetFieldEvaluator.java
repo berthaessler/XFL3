@@ -15,12 +15,12 @@ public class SetFieldEvaluator extends Evaluator {
 	}
 
 	@Override
-	public Data evaluate(Expression expression, Context rti) throws Exception {
+	public Data evaluate(Expression expression, Context context) throws Exception {
 
-		String var = (String) expression.getElement(0).evaluate(rti).getValue();
-		Document refDoc = rti.getRefDoc();
+		String var = (String) expression.getElement(0).evaluate(context).getValue();
+		Document refDoc = context.getRefDoc();
 
-		Data res = expression.getElement(1).evaluate(rti);
+		Data res = expression.getElement(1).evaluate(context);
 		if (res.getType() == DataType.UNAVAILABLE) {
 			refDoc.removeItem(var);
 		} else {

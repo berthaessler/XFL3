@@ -43,6 +43,7 @@ public class GlobalVarStore extends AbstractVarStore {
 		}
 
 		try {
+			@SuppressWarnings("unchecked")
 			Vector<Item> items = getDoc().getItems();
 			for (Item item : items) {
 				String name = item.getName();

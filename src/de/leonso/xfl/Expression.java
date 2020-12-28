@@ -282,11 +282,11 @@ public class Expression implements Serializable {
 		labels.put(name, pos);
 	}
 
-	public Data evaluate(Context rti) throws ScriptException {
+	public Data evaluate(Context context) throws ScriptException {
 		XflEngine engine = getEngine();
 		Evaluator evaluator = engine.getExpressionEvaluator(this);
 		try {
-			Data res = evaluator.evaluate(this, rti);
+			Data res = evaluator.evaluate(this, context);
 			if (engine.isDebugMode()) {
 				engine.debug(this, res);
 			}

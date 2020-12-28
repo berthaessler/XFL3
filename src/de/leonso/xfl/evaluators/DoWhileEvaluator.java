@@ -21,7 +21,7 @@ public class DoWhileEvaluator extends BlockEvaluator {
 	}
 
 	@Override
-	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context rti) throws Exception {
+	protected Data processBlock(Expression expression, ArrayList<Expression> elements, Data defaultData, int iStart, Context context) throws Exception {
 
 		Data dTemp = null;
 		Data res = defaultData;
@@ -31,14 +31,14 @@ public class DoWhileEvaluator extends BlockEvaluator {
 
 			for (int i = 0; i < elements.size() - 1; i++) {
 				try {
-					res = evalAndCheckGoto(expression, i, elements, defaultData, rti);
+					res = evalAndCheckGoto(expression, i, elements, defaultData, context);
 				} catch (InstructionPointerChangedException e) {
 					i = e.getNewInstructionPointer(); // instruction pointer umsetzen
 				}
 			}
 
 			// condition
-			dTemp = elements.get(elements.size() - 1).evaluate(rti);
+			dTemp = elements.get(elements.size() - 1).evaluate(context);
 			cond = dTemp.isTrue();
 
 			// aufräumen
